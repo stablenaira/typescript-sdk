@@ -37,7 +37,7 @@ type RequestOptions = {
   body?: unknown;
 };
 
-const DEFAULT_BASE_URL = "https://api.stablenaira.com";
+const DEFAULT_BASE_URL = "https://api.stablenaira.com/v1";
 const DEFAULT_TIMEOUT_MS = 15_000;
 
 function ensureTrailingSlashRemoved(url: string): string {
@@ -77,7 +77,7 @@ export class StableNairaClient {
   private readonly timeoutMs: number;
   private readonly authMode: StableNairaAuthMode;
   private readonly fetchImpl: typeof fetch;
-  private readonly extraHeaders?: Record<string, string>;
+  private readonly extraHeaders: Record<string, string> | undefined;
 
   public constructor(options: StableNairaClientOptions) {
     if (!options.apiKey?.trim()) {
@@ -88,33 +88,31 @@ export class StableNairaClient {
     this.authMode = options.authMode ?? "x-api-key";
     this.timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
     this.fetchImpl = options.fetch ?? globalThis.fetch;
-    this.extraHeaders = options.headers;
+    this.extraHeaders = options.headers ? options.headers : undefined;
   }
 
   public readonly banks = {
     list: (query?: ListBanksQuery) =>
-      this.request<Bank[]>("/v1/banks", {
-        query,
-      }),
+      this.request<Bank[]>("/banks", query ? { query } : {}),
   };
 
   public readonly wallet = {
-    list: () => this.request<MerchantWallet[]>("/v1/wallet"),
+    list: () => this.request<MerchantWallet[]>("/wallet"),
     getBalance: (query: GetWalletBalanceQuery) =>
-      this.request<WalletBalance>("/v1/wallet/balance", { query }),
+      this.request<WalletBalance>("/wallet/balance", { query }),
   };
 
   public readonly recipients = {
-    list: () => this.request<Recipient[]>("/v1/recipients"),
+    list: () => this.request<Recipient[]>("/recipients"),
     create: (body: CreateRecipientBody) =>
-      this.request<Recipient>("/v1/recipients", { method: "POST", body }),
+      this.request<Recipient>("/recipients", { method: "POST", body }),
     remove: (recipientId: string) =>
-      this.request<null>(`/v1/recipients/${encodeURIComponent(recipientId)}`, {
+      this.request<null>(`/recipients/${encodeURIComponent(recipientId)}`, {
         method: "DELETE",
       }),
     setDefault: (recipientId: string) =>
       this.request<null>(
-        `/v1/recipients/${encodeURIComponent(recipientId)}/default`,
+        `/recipients/${encodeURIComponent(recipientId)}/default`,
         {
           method: "POST",
         },
@@ -122,30 +120,30 @@ export class StableNairaClient {
   };
 
   public readonly virtualAccount = {
-    details: () => this.request<VirtualAccount>("/v1/virtual-account"),
+    details: () => this.request<VirtualAccount>("/virtual-account"),
     balance: () =>
-      this.request<VirtualAccountBalance>("/v1/virtual-account/balance"),
+      this.request<VirtualAccountBalance>("/virtual-account/balance"),
     withdraw: (body: WithdrawVirtualAccountBody) =>
-      this.request<TransactionWithEnvelope>("/v1/virtual-account/withdraw", {
+      this.request<TransactionWithEnvelope>("/virtual-account/withdraw", {
         method: "POST",
         body,
       }),
   };
 
   public readonly transactions = {
-    list: () => this.request<Transaction[]>("/v1/transactions"),
+    list: () => this.request<Transaction[]>("/transactions"),
     redeem: (body: RedeemBody) =>
-      this.request<RedeemResponseData>("/v1/transactions/redeem", {
+      this.request<RedeemResponseData>("/transactions/redeem", {
         method: "POST",
         body,
       }),
     acquire: (body: AcquireBody) =>
-      this.request<TransactionWithEnvelope>("/v1/transactions/acquire", {
+      this.request<TransactionWithEnvelope>("/transactions/acquire", {
         method: "POST",
         body,
       }),
     withdraw: (body: WithdrawBody) =>
-      this.request<TransactionWithEnvelope>("/v1/transactions/withdraw", {
+      this.request<TransactionWithEnvelope>("/transactions/withdraw", {
         method: "POST",
         body,
       }),
@@ -179,12 +177,15 @@ export class StableNairaClient {
 
     let response: Response;
     try {
-      response = await this.fetchImpl(url, {
+      const requestInit: RequestInit = {
         method,
         headers,
-        body: hasBody ? JSON.stringify(options.body) : undefined,
         signal: controller.signal,
-      });
+      };
+      if (hasBody) {
+        requestInit.body = JSON.stringify(options.body);
+      }
+      response = await this.fetchImpl(url, requestInit);
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
         throw new StableNairaNetworkError(
