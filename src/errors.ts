@@ -15,7 +15,9 @@ export class StableNairaApiError extends Error {
     this.name = "StableNairaApiError";
     this.status = params.status;
     this.code = params.code;
-    this.details = params.details;
+    if (params.details !== undefined) {
+      this.details = params.details;
+    }
   }
 }
 
@@ -25,6 +27,8 @@ export class StableNairaNetworkError extends Error {
   public constructor(message: string, cause?: unknown) {
     super(message);
     this.name = "StableNairaNetworkError";
-    this.cause = cause;
+    if (cause !== undefined) {
+      this.cause = cause;
+    }
   }
 }

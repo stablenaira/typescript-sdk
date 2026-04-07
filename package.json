@@ -6,7 +6,11 @@
   "author": "StableNaira",
   "repository": {
     "type": "git",
-    "url": "https://github.com/stablenaira/typescript-sdk.git"
+    "url": "git+https://github.com/stablenaira/typescript-sdk.git"
+  },
+  "homepage": "https://github.com/stablenaira/typescript-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/stablenaira/typescript-sdk/issues"
   },
   "keywords": [
     "stablenaira",
@@ -29,6 +33,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "sideEffects": false,
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --clean",
