@@ -1,0 +1,46 @@
+{
+  "name": "@stablenaira/sdk",
+  "version": "0.1.0",
+  "description": "Official type-safe TypeScript SDK for StableNaira v1 API",
+  "license": "MIT",
+  "author": "StableNaira",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stablenaira/typescript-sdk.git"
+  },
+  "keywords": [
+    "stablenaira",
+    "sdk",
+    "api",
+    "typescript",
+    "javascript",
+    "stablecoin"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.2",
+    "typescript": "^5.6.3"
+  }
+}
