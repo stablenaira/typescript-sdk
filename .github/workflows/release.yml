@@ -4,6 +4,9 @@ on:
   push:
     tags:
       - "v*"
+  release:
+    types: [published]
+  workflow_dispatch:
 
 jobs:
   publish:
@@ -22,13 +25,16 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Typecheck
         run: npm run typecheck
 
       - name: Build
         run: npm run build
+
+      - name: Verify package name/version
+        run: node -e "const p=require('./package.json'); console.log('Publishing', p.name, p.version)"
 
       - name: Verify npm token is configured
         env:
@@ -42,4 +48,4 @@ jobs:
       - name: Publish to npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public
+        run: npm publish --access public --provenance
