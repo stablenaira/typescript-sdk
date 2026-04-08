@@ -98,8 +98,8 @@ export class StableNairaClient {
 
   public readonly wallet = {
     list: () => this.request<MerchantWallet[]>("/wallet"),
-    getBalance: (query: GetWalletBalanceQuery) =>
-      this.request<WalletBalance>("/wallet/balance", { query }),
+    getBalance: (query?: GetWalletBalanceQuery) =>
+      this.request<WalletBalance>("/wallet/balance", query ? { query } : {}),
   };
 
   public readonly recipients = {

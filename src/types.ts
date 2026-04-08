@@ -127,5 +127,5 @@ export type RedeemResponseData = {
 };
 
 export type GetWalletBalanceQuery = {
-  walletAddress: string;
+  walletAddress?: string;
 };

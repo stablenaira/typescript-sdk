@@ -113,7 +113,7 @@ const wallets = await client.wallet.list();
 // wallets.data is MerchantWallet[]
 ```
 
-#### `wallet.getBalance(query)`
+#### `wallet.getBalance(query?)`
 
 `GET /v1/wallet/balance`
 
@@ -122,6 +122,9 @@ const balance = await client.wallet.getBalance({
   walletAddress: "0xA7A3D7e7E4A2AbcD20DA74E846A7fA1d677f8E27",
 });
 // balance.data is WalletBalance
+
+const primaryBalance = await client.wallet.getBalance();
+// if walletAddress is omitted, API resolves merchant primary wallet
 ```
 
 ### Recipients
