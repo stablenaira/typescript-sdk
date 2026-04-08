@@ -1,6 +1,6 @@
 {
   "name": "@stablenaira/sdk",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Official type-safe TypeScript SDK for StableNaira v1 API",
   "license": "MIT",
   "author": "StableNaira",
