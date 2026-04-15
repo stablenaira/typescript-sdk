@@ -1,6 +1,6 @@
 {
   "name": "@stablenaira/sdk",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Official type-safe TypeScript SDK for StableNaira v1 API",
   "license": "MIT",
   "author": "StableNaira",
@@ -41,7 +41,11 @@
     "build": "tsup src/index.ts --format esm,cjs --dts --clean",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "version-patch": "npm version patch --no-git-tag-version",
+    "version-minor": "npm version minor --no-git-tag-version",
+    "version-major": "npm version major --no-git-tag-version",
+    "publish": "npm publish --access public"
   },
   "engines": {
     "node": ">=18"

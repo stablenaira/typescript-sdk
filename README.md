@@ -1,6 +1,8 @@
 # StableNaira TypeScript SDK
 
-Official type-safe TypeScript/JavaScript SDK for the StableNaira v1 API.
+StableNaira is a platform for buying and selling stablecoins in Nigeria with secure fiat on/off-ramp infrastructure for developers and businesses.
+This type-safe TypeScript/JavaScript SDK helps you integrate the StableNaira v1 API to manage accounts, wallets, payouts, and related workflows.
+Generate your API key from [app.stablenaira.com](https://app.stablenaira.com) before using the SDK.
 
 ## Requirements
 
